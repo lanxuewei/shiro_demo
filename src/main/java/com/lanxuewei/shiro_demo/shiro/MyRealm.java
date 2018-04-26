@@ -4,10 +4,7 @@
  */
 package com.lanxuewei.shiro_demo.shiro;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.Realm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +32,13 @@ public class MyRealm implements Realm {
     public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String username = (String) token.getPrincipal();                //得到用户名
         String password = new String((char[]) token.getCredentials());  //得到密码
-
+        if (!"zhang".equals(username)) {
+            throw new UnknownAccountException();        //用户名错误
+        }
+        if (!"123".equals(password)) {
+            throw new IncorrectCredentialsException();  //密码错误
+        }
+        //身份验证成功，返回一个AuthenticationInfo实现
+        return new SimpleAuthenticationInfo(username, password, getName());
     }
 }
